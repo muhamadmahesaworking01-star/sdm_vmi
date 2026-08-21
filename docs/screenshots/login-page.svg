@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <rect width="1200" height="720" fill="#f4f7fb"/>
+  <rect x="80" y="80" width="1040" height="560" rx="24" fill="#ffffff" stroke="#dce6f5" stroke-width="3"/>
+  <rect x="140" y="180" width="330" height="290" rx="16" fill="#dfe9f7"/>
+  <rect x="520" y="180" width="460" height="60" rx="12" fill="#1f4e79"/>
+  <rect x="520" y="270" width="380" height="24" rx="12" fill="#d9e2ef"/>
+  <rect x="520" y="320" width="320" height="24" rx="12" fill="#d9e2ef"/>
+  <rect x="520" y="380" width="220" height="44" rx="10" fill="#4f81bd"/>
+  <text x="120" y="640" font-family="Segoe UI, Arial" font-size="34" fill="#234" font-weight="600">Placeholder Screenshot: Halaman Login</text>
+</svg>

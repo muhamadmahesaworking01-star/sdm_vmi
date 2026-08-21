@@ -1,0 +1,115 @@
+<mxfile host="app.diagrams.net" modified="2026-07-25T00:00:00.000Z" agent="Codex" version="24.7.17" type="device">
+  <diagram id="uml-activity-sdm" name="UML Activity Diagram SDM">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1800" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="UML ACTIVITY DIAGRAM - SISTEM INFORMASI SDM" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="20" width="1320" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- UML swimlanes -->
+        <mxCell id="user-lane" value="Pengguna" style="swimlane;html=1;horizontal=1;startSize=50;fillColor=#ffffff;strokeColor=#000000;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="80" width="350" height="1500" as="geometry"/>
+        </mxCell>
+        <mxCell id="system-lane" value="Sistem Informasi SDM" style="swimlane;html=1;horizontal=1;startSize=50;fillColor=#ffffff;strokeColor=#000000;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="80" width="560" height="1500" as="geometry"/>
+        </mxCell>
+        <mxCell id="data-lane" value="Database / Admin" style="swimlane;html=1;horizontal=1;startSize=50;fillColor=#ffffff;strokeColor=#000000;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="930" y="80" width="410" height="1500" as="geometry"/>
+        </mxCell>
+
+        <!-- Initial node and authentication -->
+        <mxCell id="initial" value="" style="shape=umlInitialState;html=1;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="user-lane">
+          <mxGeometry x="160" y="80" width="30" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-open-login" value="Buka halaman login" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="user-lane">
+          <mxGeometry x="75" y="140" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-fill-login" value="Isi login ID dan password" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="user-lane">
+          <mxGeometry x="75" y="250" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-authenticate" value="Autentikasi dan validasi&lt;br&gt;status akun" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="system-lane">
+          <mxGeometry x="130" y="250" width="300" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj-user" value="&lt;&lt;data&gt;&gt;&lt;br&gt;users" style="shape=umlObject;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=15;" vertex="1" parent="data-lane">
+          <mxGeometry x="120" y="250" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="decision-valid" value="Valid?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontSize=14;" vertex="1" parent="system-lane">
+          <mxGeometry x="205" y="360" width="150" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-login-failed" value="Tampilkan pesan login gagal" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="system-lane">
+          <mxGeometry x="15" y="490" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-create-session" value="Buat sesi pengguna" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="system-lane">
+          <mxGeometry x="130" y="490" width="300" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj-log-login" value="&lt;&lt;data&gt;&gt;&lt;br&gt;activity_logs" style="shape=umlObject;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=15;" vertex="1" parent="data-lane">
+          <mxGeometry x="100" y="490" width="210" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Role routing and activities -->
+        <mxCell id="act-route-role" value="Arahkan ke dashboard sesuai role" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="system-lane">
+          <mxGeometry x="130" y="620" width="300" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-select" value="Pilih aktivitas: profil, dokumen,&lt;br&gt;kompetensi, tim, atau administrasi" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="user-lane">
+          <mxGeometry x="45" y="750" width="260" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-check-access" value="Periksa hak akses dan proses&lt;br&gt;permintaan pengguna" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="system-lane">
+          <mxGeometry x="130" y="750" width="300" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj-sdm" value="&lt;&lt;data&gt;&gt;&lt;br&gt;employees&lt;br&gt;dokumen &amp; kompetensi" style="shape=umlObject;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=15;" vertex="1" parent="data-lane">
+          <mxGeometry x="65" y="750" width="280" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-show-result" value="Tampilkan hasil atau pesan validasi" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="system-lane">
+          <mxGeometry x="130" y="900" width="300" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-admin" value="Kelola akun, data SDM,&lt;br&gt;spesialisasi, pengumuman,&lt;br&gt;atau backup" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="user-lane">
+          <mxGeometry x="45" y="1020" width="260" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-admin-save" value="Validasi dan proses perubahan admin" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="system-lane">
+          <mxGeometry x="130" y="1020" width="300" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj-save" value="&lt;&lt;data&gt;&gt;&lt;br&gt;Simpan perubahan / backup" style="shape=umlObject;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=15;" vertex="1" parent="data-lane">
+          <mxGeometry x="80" y="1020" width="250" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Final activity -->
+        <mxCell id="act-logout" value="Logout" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="user-lane">
+          <mxGeometry x="75" y="1190" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-destroy-session" value="Hapus sesi dan catat logout" style="shape=umlActivity;whiteSpace=wrap;html=1;rounded=1;fillColor=#ffffff;strokeColor=#000000;fontSize=15;" vertex="1" parent="system-lane">
+          <mxGeometry x="130" y="1190" width="300" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="obj-logout" value="&lt;&lt;data&gt;&gt;&lt;br&gt;activity_logs" style="shape=umlObject;whiteSpace=wrap;;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=15;" vertex="1" parent="data-lane">
+          <mxGeometry x="100" y="1190" width="210" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="final" value="" style="shape=umlFinalState;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" vertex="1" parent="system-lane">
+          <mxGeometry x="265" y="1340" width="34" height="34" as="geometry"/>
+        </mxCell>
+
+        <!-- UML control flows -->
+        <mxCell id="f1" edge="1" parent="1" source="initial" target="act-open-login" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f2" edge="1" parent="1" source="act-open-login" target="act-fill-login" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f3" edge="1" parent="1" source="act-fill-login" target="act-authenticate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f4" edge="1" parent="1" source="act-authenticate" target="obj-user" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f5" edge="1" parent="1" source="obj-user" target="decision-valid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f6" value="[tidak]" edge="1" parent="1" source="decision-valid" target="act-login-failed" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f7" value="[ya]" edge="1" parent="1" source="decision-valid" target="act-create-session" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f8" edge="1" parent="1" source="act-create-session" target="obj-log-login" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f9" edge="1" parent="1" source="act-create-session" target="act-route-role" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f10" edge="1" parent="1" source="act-route-role" target="act-select" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f11" edge="1" parent="1" source="act-select" target="act-check-access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f12" edge="1" parent="1" source="act-check-access" target="obj-sdm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f13" edge="1" parent="1" source="obj-sdm" target="act-show-result" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f14" edge="1" parent="1" source="act-show-result" target="act-admin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f15" edge="1" parent="1" source="act-admin" target="act-admin-save" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f16" edge="1" parent="1" source="act-admin-save" target="obj-save" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f17" edge="1" parent="1" source="act-show-result" target="act-logout" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f18" edge="1" parent="1" source="act-logout" target="act-destroy-session" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f19" edge="1" parent="1" source="act-destroy-session" target="obj-logout" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+        <mxCell id="f20" edge="1" parent="1" source="act-destroy-session" target="final" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=1;"/>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

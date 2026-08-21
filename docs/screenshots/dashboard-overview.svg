@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <rect width="1200" height="720" fill="#f7f9fc"/>
+  <rect x="80" y="80" width="1040" height="560" rx="24" fill="#ffffff" stroke="#dce6f5" stroke-width="3"/>
+  <rect x="120" y="120" width="960" height="80" rx="16" fill="#1f4e79"/>
+  <rect x="120" y="230" width="280" height="140" rx="16" fill="#dce9f8"/>
+  <rect x="430" y="230" width="280" height="140" rx="16" fill="#dce9f8"/>
+  <rect x="740" y="230" width="340" height="140" rx="16" fill="#dce9f8"/>
+  <rect x="120" y="410" width="960" height="180" rx="16" fill="#eef4fb"/>
+  <text x="120" y="640" font-family="Segoe UI, Arial" font-size="34" fill="#234" font-weight="600">Placeholder Screenshot: Dashboard</text>
+</svg>

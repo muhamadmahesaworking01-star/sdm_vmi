@@ -1,0 +1,13 @@
+Dokumen Word yang siap diekspor dapat dibuat dari file markdown berikut:
+- [docs/user-guide.md](docs/user-guide.md)
+
+Lampiran visual:
+- [docs/screenshots/login-page.svg](docs/screenshots/login-page.svg)
+- [docs/screenshots/dashboard-overview.svg](docs/screenshots/dashboard-overview.svg)
+- [docs/screenshots/admin-panel.svg](docs/screenshots/admin-panel.svg)
+
+Skrip otomatisasi:
+- [scripts/setup-project.ps1](scripts/setup-project.ps1)
+- [scripts/setup-project.bat](scripts/setup-project.bat)
+
+Catatan: Untuk menghasilkan file .docx, buka markdown di editor yang mendukung export DOCX atau gunakan tools seperti Pandoc.
