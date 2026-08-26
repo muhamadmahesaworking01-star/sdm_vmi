@@ -21,7 +21,6 @@ class EmployeeTest extends TestCase
 
         $response = $this->actingAs($user)->post(route('employees.store'), [
             'nama' => 'Budi Santoso',
-            'nip' => 'PGJ001',
             'peran' => 'pengajar',
             'status_aktif' => 'aktif',
             'email' => 'budi@example.com',
@@ -32,7 +31,6 @@ class EmployeeTest extends TestCase
         $response->assertRedirect(route('dashboard'));
         $this->assertDatabaseHas('employees', [
             'nama' => 'Budi Santoso',
-            'nip' => 'PGJ001',
             'peran' => 'pengajar',
             'email' => 'budi@example.com',
         ]);
@@ -44,7 +42,6 @@ class EmployeeTest extends TestCase
 
         $response = $this->actingAs($user)->post(route('employees.store'), [
             'nama' => 'Siti Aminah',
-            'nip' => 'KRY001',
             'peran' => 'karyawan',
             'status_aktif' => 'aktif',
             'email' => 'siti@example.com',
@@ -53,7 +50,6 @@ class EmployeeTest extends TestCase
         $response->assertRedirect(route('dashboard'));
         $this->assertDatabaseHas('employees', [
             'nama' => 'Siti Aminah',
-            'nip' => 'KRY001',
             'peran' => 'karyawan',
             'email' => 'siti@example.com',
         ]);
@@ -79,7 +75,7 @@ class EmployeeTest extends TestCase
             'email' => 'lama@example.com',
         ]);
 
-        $response->assertSessionHasErrors(['nip', 'email']);
+        $response->assertSessionHasErrors(['email']);
     }
 
     public function test_non_super_admin_cannot_create_employee(): void
@@ -113,7 +109,6 @@ class EmployeeTest extends TestCase
 
         $response = $this->actingAs($user)->put(route('employees.update', $employee), [
             'nama' => 'Nama Baru',
-            'nip' => 'UPD002',
             'peran' => 'pengajar',
             'status_aktif' => 'nonaktif',
             'email' => 'baru-update@example.com',
@@ -125,7 +120,7 @@ class EmployeeTest extends TestCase
         $this->assertDatabaseHas('employees', [
             'id' => $employee->id,
             'nama' => 'Nama Baru',
-            'nip' => 'UPD002',
+            'nip' => 'UPD001',
             'peran' => 'pengajar',
             'status_aktif' => 'nonaktif',
             'email' => 'baru-update@example.com',
@@ -203,7 +198,7 @@ class EmployeeTest extends TestCase
 
         $response->assertRedirect(route('admin.employees.index'));
         $this->assertDatabaseHas('employees', [
-            'nip' => 'KRY-IMPORT', 'nama' => 'Nama Impor', 'peran' => 'karyawan', 'jabatan_divisi' => 'IT',
+            'nama' => 'Nama Impor', 'peran' => 'karyawan', 'jabatan_divisi' => 'IT',
         ]);
         $this->actingAs($user)->get(route('admin.employees.export'))
             ->assertOk()
@@ -225,7 +220,7 @@ class EmployeeTest extends TestCase
         $this->assertDatabaseMissing('employees', ['nip' => 'KRY-INVALID']);
     }
 
-    public function test_employee_has_hr_relations_via_nip(): void
+    public function test_employee_has_hr_relations_via_employee_id(): void
     {
         $employee = Employee::create([
             'nama' => 'Relasi SDM', 'nip' => 'REL001', 'peran' => 'karyawan',
@@ -233,16 +228,16 @@ class EmployeeTest extends TestCase
         ]);
 
         EmployeeDocument::create([
-            'nip_pemilik' => $employee->nip, 'jenis_dokumen' => 'KTP', 'nama_file_path' => 'ktp.pdf',
+            'employee_id' => $employee->id, 'jenis_dokumen' => 'KTP', 'nama_file_path' => 'ktp.pdf',
         ]);
         Payroll::create([
-            'nip_pegawai' => $employee->nip, 'no_slip' => 'SLIP-REL001', 'bulan_tahun' => '2026-07',
+            'employee_id' => $employee->id, 'no_slip' => 'SLIP-REL001', 'bulan_tahun' => '2026-07',
             'gaji_pokok_history' => 5000000, 'total_gaji_clean' => 5000000,
             'tanggal_transfer' => '2026-07-01 09:00:00',
         ]);
 
         $this->assertCount(1, $employee->documents);
-        $this->assertSame('REL001', $employee->payrolls->first()->nip_pegawai);
+        $this->assertSame($employee->id, $employee->payrolls->first()->employee_id);
     }
 
     public function test_employee_can_view_dashboard_and_update_personal_profile(): void
@@ -254,7 +249,7 @@ class EmployeeTest extends TestCase
         ]);
 
         $this->actingAs($user)->get(route('employee.dashboard'))
-            ->assertRedirect(route('employee.profile.edit'));
+            ->assertOk();
 
         $this->actingAs($user)->get(route('employee.profile.edit'))
             ->assertOk()
@@ -294,7 +289,7 @@ class EmployeeTest extends TestCase
 
         $response->assertRedirect(route('employee.documents.index'));
         $document = EmployeeDocument::firstOrFail();
-        $this->assertSame($employee->nip, $document->nip_pemilik);
+        $this->assertSame($employee->id, $document->employee_id);
         $this->assertTrue(Storage::disk('local')->exists($document->nama_file_path));
     }
 }
