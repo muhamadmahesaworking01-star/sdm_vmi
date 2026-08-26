@@ -247,6 +247,7 @@ class EmployeeTest extends TestCase
             'nama' => 'Karyawan Profil', 'nip' => 'KRY-PROFIL', 'peran' => 'karyawan',
             'status_aktif' => 'aktif', 'email' => $user->email,
         ]);
+        $user->update(['employee_id' => $employee->id]);
 
         $this->actingAs($user)->get(route('employee.dashboard'))
             ->assertOk();
@@ -281,6 +282,7 @@ class EmployeeTest extends TestCase
             'nama' => 'Karyawan Dokumen', 'nip' => 'KRY-DOC', 'peran' => 'karyawan',
             'status_aktif' => 'aktif', 'email' => $user->email,
         ]);
+        $user->update(['employee_id' => $employee->id]);
 
         $response = $this->actingAs($user)->post(route('employee.documents.store'), [
             'jenis_dokumen' => 'KTP',
