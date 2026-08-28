@@ -41,6 +41,14 @@ class DashboardController extends Controller
         ];
         $announcements = Announcement::latest('published_at')->latest()->take(3)->get();
         $activities = ActivityLog::with('user')->latest()->take(4)->get();
+        $accountStatus = [
+            'aktif' => User::where('status_akun', 'aktif')->with('employee')->get(),
+            'nonaktif' => User::where('status_akun', '!=', 'aktif')->with('employee')->get(),
+            'belum_terhubung' => User::whereNull('employee_id')->get(),
+        ];
+        $employeeDetails = Employee::with(['user', 'documents', 'contractHistories'])
+            ->whereHas('user', fn ($query) => $query->whereIn('role', $roles))->get();
+        $incompleteEmployees = $employeeDetails->filter(fn ($employee) => $this->profileCompletion($employee) < 90)->values();
 
         return view('admin.dashboard', [
             'totalEmployees' => $totalEmployees,
@@ -65,6 +73,9 @@ class DashboardController extends Controller
             'documentCount' => EmployeeDocument::whereHas('employee.user', fn ($query) => $query->whereIn('role', $roles))->count(),
             'announcements' => $announcements,
             'activities' => $activities,
+            'accountStatus' => $accountStatus,
+            'employeeDetails' => $employeeDetails,
+            'incompleteEmployees' => $incompleteEmployees,
         ]);
     }
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'SDM Villa Merah')</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -181,6 +181,52 @@
             gap: 6px;
         }
 
+        .top-notification-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            color: #ff5258;
+            background: transparent;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .top-notification-link:hover {
+            color: #e53940;
+            background: #fff0f1;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: -1px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 4px;
+            border: 2px solid #f8fafc;
+            border-radius: 50%;
+            background: #ffd43d;
+            color: #513f00;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 14px;
+            text-align: center;
+        }
+
+        .top-support-link { border: 0; background: #eaf2ff; color: #1769dc; width: 38px; height: 38px; border-radius: 50%; font-size: 18px; cursor: pointer; }
+        .top-support-link:hover { background: #1769dc; color: #fff; }
+        .support-modal { border: 0; border-radius: 14px; overflow: hidden; }
+        .support-modal .modal-header { border-bottom: 1px solid #edf1f4; }
+        .support-modal .modal-title { font-size: 1.05rem; color: #14243b; }
+        .support-modal .modal-header small, .support-callout span { display: block; color: #728194; font-size: .72rem; margin-top: .2rem; }
+        .support-callout { display: flex; gap: .75rem; padding: .85rem; margin-bottom: 1rem; border-radius: 9px; background: #eaf2ff; color: #1769dc; }
+        .support-callout i { font-size: 1.45rem; }
+        .support-callout span { color: #4d6078; }
+
         .logout-top-btn {
             background-color: #dc3545;
             color: #fff;
@@ -298,10 +344,18 @@
                                 <button type="submit" class="logout-top-btn">Keluar</button>
                             </form>
                         </div>
+                        <a href="{{ route('notifications.index') }}" class="top-notification-link" title="Notifikasi" aria-label="Notifikasi">
+                            <i class="bi bi-bell-fill"></i><span class="notification-badge">!</span>
+                        </a>
+                        <button type="button" class="top-support-link" data-bs-toggle="modal" data-bs-target="#supportModal" title="Hubungi Admin" aria-label="Hubungi Admin"><i class="bi bi-headset"></i></button>
                         <div class="user-avatar">
                             {{ substr(auth()->user()->name ?? 'U', 0, 1) }}
                         </div>
                     </div>
+                </div>
+
+                <div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="supportModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered"><div class="modal-content support-modal"><div class="modal-header"><div><h5 class="modal-title" id="supportModalLabel">Call Center SDM</h5><small>Ajukan pembaruan atau arahan melalui Admin.</small></div><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button></div><div class="modal-body"><div class="support-callout"><i class="bi bi-headset"></i><div><b>Butuh bantuan atau perubahan data?</b><span>Pilih tujuan dan tuliskan arahan yang perlu ditindaklanjuti.</span></div></div><label class="form-label" for="supportTarget">Tujuan</label><select id="supportTarget" class="form-select mb-3">@if(auth()->user()?->role === 'super_admin')<option>Direksi</option><option>Karyawan</option><option>Pengajar</option><option>Double Role</option><option>Admin lain</option>@else<option>Admin</option>@endif</select><label class="form-label" for="supportMessage">Pesan pembaruan</label><textarea id="supportMessage" class="form-control" rows="4" placeholder="Tuliskan perubahan atau arahan..."></textarea></div><div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button><button type="button" class="btn btn-primary" id="supportSendButton"><i class="bi bi-send me-1"></i> Ajukan Pembaruan</button></div></div></div>
                 </div>
 
                 @unless (request()->routeIs('dashboard') || request()->routeIs(auth()->user()?->homeRoute()))
@@ -333,6 +387,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script>
+        document.getElementById('supportSendButton')?.addEventListener('click', function () {
+            const message = document.getElementById('supportMessage')?.value.trim();
+            const target = document.getElementById('supportTarget')?.value;
+            if (!message) { document.getElementById('supportMessage').focus(); return; }
+            const requests = JSON.parse(localStorage.getItem('sdm_support_requests') || '[]');
+            requests.unshift({ target, message, created_at: new Date().toISOString() });
+            localStorage.setItem('sdm_support_requests', JSON.stringify(requests.slice(0, 20)));
+            bootstrap.Modal.getInstance(document.getElementById('supportModal'))?.hide();
+            alert('Pengajuan pembaruan sudah dicatat untuk Admin.');
+            document.getElementById('supportMessage').value = '';
+        });
+
         // Toggle submenu
         document.querySelectorAll('.submenu-toggle').forEach(link => {
             link.addEventListener('click', function(e) {

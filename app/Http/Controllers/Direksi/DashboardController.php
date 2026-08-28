@@ -6,20 +6,30 @@ use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\User;
 use App\Models\Announcement;
+use App\Models\EmployeeDocument;
+use App\Models\ActivityLog;
+use Illuminate\Support\Collection;
 
 class DashboardController extends Controller
 {
     public function __invoke()
     {
+        /** @var User $authenticatedUser */
+        $authenticatedUser = request()->user();
+        abort_unless($authenticatedUser instanceof User, 403);
         $roles = [User::ROLE_KARYAWAN, User::ROLE_PENGAJAR, User::ROLE_KARYAWAN_PENGAJAR];
-        $employees = Employee::with('contractHistories')
+        /** @var Collection<int, Employee> $employees */
+        $employees = Employee::with(['contractHistories', 'documents'])
             ->whereHas('user', fn ($query) => $query->whereIn('role', $roles))
             ->get();
         $totalEmployees = $employees->count();
         $totalStaff = $employees->filter(fn ($employee) => $employee->user?->role === User::ROLE_KARYAWAN)->count();
         $totalTeachers = $employees->filter(fn ($employee) => $employee->user?->role === User::ROLE_PENGAJAR)->count();
         $totalDoubleRole = $employees->filter(fn ($employee) => $employee->user?->role === User::ROLE_KARYAWAN_PENGAJAR)->count();
-        $totalDireksi = Employee::whereHas('user', fn ($query) => $query->where('role', User::ROLE_DIREKSI))->count();
+        $direksiEmployees = Employee::with(['user', 'contractHistories', 'documents'])
+            ->whereHas('user', fn ($query) => $query->where('role', User::ROLE_DIREKSI))
+            ->get();
+        $totalDireksi = $direksiEmployees->count();
         $totalActive = $employees->where('status_aktif', 'aktif')->count();
         $totalInactive = $employees->where('status_aktif', 'nonaktif')->count();
 
@@ -29,9 +39,13 @@ class DashboardController extends Controller
         $campusDistribution = $employees->groupBy(fn ($employee) => $employee->kampus_asal ?: 'Belum diisi')->map->count()->sortDesc();
         $monthlyUpdates = $this->monthlyUpdates($employees);
         $approvalEmployees = $employees->sortBy('nama')->take(4)->values();
+        $documentCount = EmployeeDocument::whereIn('employee_id', $employees->pluck('id'))->count();
+        $documentReadyEmployees = $employees->filter(fn ($employee) => $employee->documents()->exists())->count();
+        $turnoverRate = $totalEmployees > 0 ? round(($totalInactive / $totalEmployees) * 100, 1) : 0;
 
         return view('direksi.dashboard', [
             'employees' => $employees,
+            'direksiEmployees' => $direksiEmployees,
             'totalEmployees' => $totalEmployees,
             'totalStaff' => $totalStaff,
             'totalTeachers' => $totalTeachers,
@@ -39,7 +53,7 @@ class DashboardController extends Controller
             'totalDireksi' => $totalDireksi,
             'totalActive' => $totalActive,
             'totalInactive' => $totalInactive,
-            'user' => auth()->user(),
+            'user' => $authenticatedUser,
             'belumFinalisasi' => $belumFinalisasi,
             'finalisasiAkun' => $finalisasiAkun,
             'divisionDistribution' => $divisionDistribution,
@@ -49,10 +63,16 @@ class DashboardController extends Controller
             'monthlyUpdates' => $monthlyUpdates,
             'approvalEmployees' => $approvalEmployees,
             'announcements' => Announcement::query()->latest('published_at')->take(3)->get(),
+            'activities' => ActivityLog::with('user')->latest()->take(50)->get(),
+            'documentCount' => $documentCount,
+            'documentReadyEmployees' => $documentReadyEmployees,
+            'documentCompletionRate' => $totalEmployees > 0 ? round(($documentReadyEmployees / $totalEmployees) * 100, 1) : 0,
+            'turnoverRate' => $turnoverRate,
         ]);
     }
 
-    private function monthlyUpdates($employees): array
+    /** @param Collection<int, Employee> $employees */
+    private function monthlyUpdates(Collection $employees): array
     {
         $categories = [User::ROLE_KARYAWAN => 'Karyawan', User::ROLE_PENGAJAR => 'Pengajar', User::ROLE_KARYAWAN_PENGAJAR => 'Double Role'];
         $months = collect(range(2, 0))->map(function (int $ago) use ($employees, $categories): array {

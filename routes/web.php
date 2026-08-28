@@ -17,6 +17,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
+Route::get('/notifications', 'App\Http\Controllers\NotificationController@index')->middleware('auth')->name('notifications.index');
 Route::post('/impersonation/stop', 'App\Http\Controllers\Admin\UserController@stopImpersonating')->middleware('auth')->name('impersonation.stop');
 
 // Super Admin Routes
@@ -43,6 +44,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::delete('/admin/employees/{employee}', 'App\Http\Controllers\Admin\EmployeeController@destroy')->name('admin.employees.destroy');
     Route::get('/admin/employees/template', 'App\Http\Controllers\Admin\EmployeeDataExchangeController@template')->defaults('role', 'karyawan')->name('admin.employees.template');
     Route::get('/admin/employees/export', 'App\Http\Controllers\Admin\EmployeeDataExchangeController@export')->defaults('role', 'karyawan')->name('admin.employees.export');
+    Route::get('/admin/employees/import', fn () => redirect()->route('admin.employees.index'));
     Route::post('/admin/employees/import', 'App\Http\Controllers\Admin\EmployeeDataExchangeController@import')->defaults('role', 'karyawan')->name('admin.employees.import');
     
     Route::get('/admin/teachers', 'App\Http\Controllers\Admin\TeacherController@index')->name('admin.teachers.index');
@@ -51,6 +53,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::delete('/admin/teachers/{teacher}', 'App\Http\Controllers\Admin\TeacherController@destroy')->name('admin.teachers.destroy');
     Route::get('/admin/teachers/template', 'App\Http\Controllers\Admin\EmployeeDataExchangeController@template')->defaults('role', 'pengajar')->name('admin.teachers.template');
     Route::get('/admin/teachers/export', 'App\Http\Controllers\Admin\EmployeeDataExchangeController@export')->defaults('role', 'pengajar')->name('admin.teachers.export');
+    Route::get('/admin/teachers/import', fn () => redirect()->route('admin.teachers.index'));
     Route::post('/admin/teachers/import', 'App\Http\Controllers\Admin\EmployeeDataExchangeController@import')->defaults('role', 'pengajar')->name('admin.teachers.import');
     Route::get('/admin/documents/{document}/file', 'App\Http\Controllers\Admin\DocumentController@show')->name('admin.documents.show');
     
