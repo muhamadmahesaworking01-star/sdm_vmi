@@ -150,6 +150,14 @@
             overflow-y: auto;
         }
 
+        .mobile-sidebar-toggle, .mobile-sidebar-close {
+            display: none;
+        }
+
+        .sidebar-backdrop {
+            display: none;
+        }
+
         .content-wrapper {
             padding: 30px;
         }
@@ -277,6 +285,24 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .mobile-sidebar-toggle {
+                display: inline-flex;
+                position: fixed;
+                top: 12px;
+                left: 12px;
+                z-index: 1100;
+                width: 44px;
+                height: 44px;
+                align-items: center;
+                justify-content: center;
+                border: 0;
+                border-radius: 10px;
+                background: #101827;
+                color: #fff;
+                box-shadow: 0 4px 14px rgba(15,23,42,.25);
+                font-size: 1.25rem;
+            }
+
             .sidebar {
                 width: 0;
                 z-index: 1000;
@@ -285,6 +311,29 @@
 
             .sidebar.mobile-open {
                 width: 260px;
+            }
+
+            .sidebar.mobile-open + .sidebar-backdrop {
+                display: block;
+                position: fixed;
+                inset: 0;
+                z-index: 999;
+                background: rgba(15, 23, 42, .45);
+            }
+
+            .mobile-sidebar-close {
+                display: inline-flex;
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                width: 34px;
+                height: 34px;
+                align-items: center;
+                justify-content: center;
+                border: 0;
+                border-radius: 8px;
+                background: rgba(255,255,255,.12);
+                color: #fff;
             }
 
             .main-content {
@@ -322,8 +371,12 @@
     </div>
     <div id="route-progress" aria-hidden="true"></div>
     <div class="main-container">
+        <button type="button" class="mobile-sidebar-toggle" id="mobileSidebarToggle" aria-label="Buka menu navigasi" aria-controls="mainSidebar" aria-expanded="false">
+            <i class="bi bi-list"></i>
+        </button>
         <!-- Sidebar -->
         @include('layouts.sidebar')
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
         <!-- Main Content -->
         <div class="main-content">
@@ -391,12 +444,7 @@
             const message = document.getElementById('supportMessage')?.value.trim();
             const target = document.getElementById('supportTarget')?.value;
             if (!message) { document.getElementById('supportMessage').focus(); return; }
-            const requests = JSON.parse(localStorage.getItem('sdm_support_requests') || '[]');
-            requests.unshift({ target, message, created_at: new Date().toISOString() });
-            localStorage.setItem('sdm_support_requests', JSON.stringify(requests.slice(0, 20)));
-            bootstrap.Modal.getInstance(document.getElementById('supportModal'))?.hide();
-            alert('Pengajuan pembaruan sudah dicatat untuk Admin.');
-            document.getElementById('supportMessage').value = '';
+            fetch('{{ route('notifications.support.store') }}', {method:'POST', headers:{'Content-Type':'application/json','X-CSRF-TOKEN':'{{ csrf_token() }}','Accept':'application/json'}, body:JSON.stringify({target,message})}).then(r=>r.json().then(data=>{if(!r.ok)throw data;return data;})).then(data=>{bootstrap.Modal.getInstance(document.getElementById('supportModal'))?.hide();alert(data.message);document.getElementById('supportMessage').value='';}).catch(()=>alert('Pengajuan gagal dikirim. Silakan coba lagi.'));
         });
 
         // Toggle submenu
@@ -419,9 +467,19 @@
         });
 
         // Mobile menu toggle
-        function toggleMobileSidebar() {
-            document.querySelector('.sidebar').classList.toggle('mobile-open');
+        const mobileSidebar = document.querySelector('.sidebar');
+        const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+        function toggleMobileSidebar(force) {
+            if (!mobileSidebar) return;
+            const open = typeof force === 'boolean' ? force : !mobileSidebar.classList.contains('mobile-open');
+            mobileSidebar.classList.toggle('mobile-open', open);
+            mobileSidebarToggle?.setAttribute('aria-expanded', String(open));
+            mobileSidebarToggle?.setAttribute('aria-label', open ? 'Tutup menu navigasi' : 'Buka menu navigasi');
         }
+        mobileSidebarToggle?.addEventListener('click', () => toggleMobileSidebar());
+        sidebarBackdrop?.addEventListener('click', () => toggleMobileSidebar(false));
+        document.querySelectorAll('.sidebar a').forEach(link => link.addEventListener('click', () => toggleMobileSidebar(false)));
     </script>
     @stack('scripts')
 </body>

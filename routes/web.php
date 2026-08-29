@@ -18,10 +18,12 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
 Route::get('/notifications', 'App\Http\Controllers\NotificationController@index')->middleware('auth')->name('notifications.index');
+Route::post('/notifications/support', 'App\Http\Controllers\NotificationController@storeSupport')->middleware('auth')->name('notifications.support.store');
 Route::post('/impersonation/stop', 'App\Http\Controllers\Admin\UserController@stopImpersonating')->middleware('auth')->name('impersonation.stop');
 
 // Super Admin Routes
 Route::middleware(['auth', 'role:super_admin'])->group(function () {
+    Route::patch('/admin/notifications/support/{supportRequest}/resolve', 'App\Http\Controllers\NotificationController@resolveSupport')->name('admin.notifications.support.resolve');
     Route::get('/admin/dashboard', AdminDashboardController::class)->name('admin.dashboard');
     Route::get('/admin/profile', 'App\\Http\\Controllers\\Admin\\ProfileController@edit')->name('admin.profile.edit');
     Route::put('/admin/profile', 'App\\Http\\Controllers\\Admin\\ProfileController@update')->name('admin.profile.update');

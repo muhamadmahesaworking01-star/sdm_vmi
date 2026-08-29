@@ -17,6 +17,7 @@ use App\Models\Employee;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
+    public function supportRequests() { return $this->hasMany(SupportRequest::class); }
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 

@@ -46,6 +46,7 @@
                     <div class="col-md-6"><div class="info-card"><small>Alamat</small><strong>{{ $employee->alamat ?? 'Belum diisi' }}</strong></div></div>
                     <div class="col-md-6"><div class="info-card"><small>NIK / KTP</small><strong>{{ $employee->ktp ?? 'Belum diisi' }}</strong></div></div>
                     <div class="col-md-6"><div class="info-card"><small>Nomor KK</small><strong>{{ $employee->kk ?? 'Belum diisi' }}</strong></div></div>
+                    <div class="col-md-6"><div class="info-card"><small>Nama Ibu Kandung</small><strong>{{ $employee->nama_gadis_ibu_kandung ?? 'Belum diisi' }}</strong></div></div>
                     <div class="col-md-6"><div class="info-card"><small>NPWP</small><strong>{{ $employee->npwp ?? 'Belum diisi' }}</strong></div></div>
                     <div class="col-md-6"><div class="info-card"><small>Tempat, Tanggal Lahir</small><strong>{{ $employee->tempat_lahir ?? 'Belum diisi' }}{{ $employee->tanggal_lahir ? ', '.$employee->tanggal_lahir->translatedFormat('d F Y') : '' }}</strong></div></div>
                     <div class="col-md-6"><div class="info-card"><small>Agama</small><strong>{{ $employee->agama ?? 'Belum diisi' }}</strong></div></div>

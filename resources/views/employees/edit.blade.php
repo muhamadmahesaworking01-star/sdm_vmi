@@ -106,6 +106,11 @@
             </div>
 
             <div>
+                <label for="nama_gadis_ibu_kandung" class="block text-sm font-medium text-gray-700 mb-1">Nama Ibu Kandung</label>
+                <input id="nama_gadis_ibu_kandung" type="text" name="nama_gadis_ibu_kandung" value="{{ old('nama_gadis_ibu_kandung', $employee->nama_gadis_ibu_kandung) }}" class="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <div>
                 <label for="tanggal_masuk" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Masuk</label>
                 <input id="tanggal_masuk" type="date" name="tanggal_masuk" value="{{ old('tanggal_masuk', $employee->tanggal_masuk?->format('Y-m-d')) }}" class="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>

@@ -98,7 +98,7 @@
                                             <div class="biodata-section"><div class="biodata-section-title"><i class="bi bi-folder2-open"></i>Dokumen Pendukung</div><div class="biodata-documents">@forelse($employee->documents as $document)<a href="{{ route('admin.documents.show', $document) }}" target="_blank"><i class="bi bi-file-earmark-text"></i>{{ str_replace('_', ' ', $document->jenis_dokumen) }}<i class="bi bi-box-arrow-up-right ms-auto"></i></a>@empty<span class="text-muted">Belum ada dokumen</span>@endforelse</div></div>
                                             <div class="biodata-section"><div class="biodata-section-title"><i class="bi bi-shield-check"></i>Status Akun/Karyawan</div><div class="biodata-status"><span>Status saat ini</span><strong>{{ ucfirst($employee->status_aktif ?? 'nonaktif') }}</strong></div></div>
                                         </div>
-                                        <form action="{{ route('employees.update', $employee) }}" method="POST" class="biodata-edit d-none">
+<form action="{{ route('employees.update', $employee) }}" method="POST" enctype="multipart/form-data" class="biodata-edit d-none">
                                             @csrf @method('PUT')
                                             <input type="hidden" name="return_to" value="admin_employees">
                                             <input type="hidden" name="peran" value="{{ $employee->peran }}">
@@ -122,6 +122,8 @@
                                                 <div class="col-md-6"><label class="form-label">Berat Badan (kg)</label><input type="number" step="0.01" min="0" name="berat_badan" class="form-control" value="{{ $employee->berat_badan }}"></div>
                                                 <div class="col-md-6"><label class="form-label">Tinggi Badan (cm)</label><input type="number" step="0.01" min="0" name="tinggi_badan" class="form-control" value="{{ $employee->tinggi_badan }}"></div>
                                                 <div class="col-12"><label class="form-label">Alamat</label><textarea name="alamat" rows="3" class="form-control">{{ $employee->alamat }}</textarea></div>
+                                                <div class="col-md-5"><label class="form-label">Tambah Dokumen</label><select name="dokumen_jenis" class="form-select"><option value="">Pilih jenis dokumen</option><option value="KTP">KTP</option><option value="KK">KK</option><option value="Ijazah">Ijazah</option><option value="Sertifikat_Pelatihan">Sertifikat Pelatihan</option><option value="Kontrak_Kerja">Kontrak Kerja</option><option value="Surat_Pengunduran_Diri">Surat Pengunduran Diri</option></select></div>
+                                                <div class="col-md-7"><label class="form-label">File Dokumen (opsional)</label><input type="file" name="dokumen_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png"><small class="text-muted">PDF/JPG/PNG, maksimal 5 MB. Pilih jenis dokumen jika mengunggah.</small></div>
                                             </div>
                                             <div class="d-flex justify-content-end gap-2 mt-4"><button type="button" class="btn btn-light biodata-cancel">Batal</button><button type="submit" class="btn btn-primary">Simpan Perubahan</button></div>
                                         </form>

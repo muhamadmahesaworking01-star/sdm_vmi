@@ -11,7 +11,10 @@
     ];
 @endphp
 
-<div class="sidebar">
+<div class="sidebar" id="mainSidebar">
+    <button type="button" class="mobile-sidebar-close" aria-label="Tutup menu navigasi" onclick="toggleMobileSidebar(false)">
+        <i class="bi bi-x-lg"></i>
+    </button>
     <!-- Sidebar Header -->
     <div class="sidebar-header">
         <img src="{{ asset('images/logo-vm-bg.png') }}" alt="Logo Villa Merah" class="sidebar-logo">

@@ -51,6 +51,7 @@ class ProfileController extends Controller
             'ukuran_baju' => ['nullable', Rule::in(['S', 'M', 'L', 'XL', 'XXL', 'XXXL'])],
             'gol_darah' => ['nullable', Rule::in(['A', 'B', 'AB', 'O'])],
             'status_pernikahan' => ['required', Rule::in(['Belum Menikah', 'Menikah'])],
+            'nama_gadis_ibu_kandung' => ['nullable', 'string', 'max:255'],
             'telepon' => ['required', 'string', 'max:255'],
             'alamat' => ['nullable', 'string'],
         ]);

@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Services\NipGenerator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
 {
@@ -48,6 +49,19 @@ class EmployeeController extends Controller
         $oldEmail = $employee->email;
         $validated = $this->validatedEmployeeData($request, $employee);
         $employee->update($validated);
+
+        if ($request->hasFile('dokumen_file')) {
+            $document = $request->validate([
+                'dokumen_jenis' => ['required', Rule::in(['KTP', 'KK', 'Ijazah', 'Sertifikat_Pelatihan', 'Kontrak_Kerja', 'Surat_Pengunduran_Diri'])],
+                'dokumen_file' => ['file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            ]);
+            $path = $request->file('dokumen_file')->store('employee-documents/'.$employee->nip, 'local');
+            $employee->documents()->create([
+                'employee_id' => $employee->id,
+                'jenis_dokumen' => $document['dokumen_jenis'],
+                'nama_file_path' => $path,
+            ]);
+        }
 
         // Keep the linked login account connected when Super Admin changes identity data.
         if ($oldEmail !== $employee->email) {

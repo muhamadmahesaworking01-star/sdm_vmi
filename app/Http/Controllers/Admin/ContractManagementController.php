@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\ContractHistory;
 use App\Models\Employee;
 use App\Models\EmployeeDocument;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -160,8 +162,8 @@ class ContractManagementController extends Controller
      */
     public function apiAdmin()
     {
-        $user = auth()->user();
-        abort_unless($user && $user->isSuperAdmin(), 403);
+        $user = Auth::user();
+        abort_unless($user instanceof User && $user->isSuperAdmin(), 403);
 
         $employees = Employee::with('contractHistories')->orderBy('nama')->get()->map(function ($e) {
             $latest = $e->contractHistories->sortByDesc('tanggal_mulai')->first();
@@ -189,8 +191,8 @@ class ContractManagementController extends Controller
      */
     public function apiDireksi()
     {
-        $user = auth()->user();
-        abort_unless($user && $user->hasRole('direksi'), 403);
+        $user = Auth::user();
+        abort_unless($user instanceof User && $user->hasRole('direksi'), 403);
 
         $total = Employee::count();
         $withContracts = Employee::whereHas('contractHistories')->count();
@@ -208,7 +210,7 @@ class ContractManagementController extends Controller
      */
     public function apiMe()
     {
-        $user = auth()->user();
+        $user = Auth::user();
         abort_unless($user, 403);
 
         $employee = $user->employee?->load('contractHistories');
@@ -239,8 +241,8 @@ class ContractManagementController extends Controller
 
     public function direksiContracts()
     {
-        $user = auth()->user();
-        abort_unless($user && $user->hasRole('direksi'), 403);
+        $user = Auth::user();
+        abort_unless($user instanceof User && $user->hasRole('direksi'), 403);
 
         $today = Carbon::now()->toDateString();
         $nextThirtyDays = Carbon::now()->addDays(30)->toDateString();
@@ -297,7 +299,7 @@ class ContractManagementController extends Controller
 
     private function renderPersonalContractPage(string $view, string $title, string $description)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         abort_unless($user, 403);
 
         $employee = Employee::query()

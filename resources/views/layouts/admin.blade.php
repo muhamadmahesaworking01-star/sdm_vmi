@@ -29,7 +29,11 @@
     @endphp
 
     <div class="min-h-screen flex">
-        <aside class="hidden md:flex md:w-72 md:flex-col bg-gray-900 text-white">
+        <button type="button" id="adminMobileMenuToggle" class="md:hidden fixed left-3 top-3 z-50 rounded-lg bg-gray-900 px-3 py-2 text-xl text-white shadow-lg" aria-label="Buka menu navigasi" aria-expanded="false">
+            &#9776;
+        </button>
+        <div id="adminSidebarBackdrop" class="hidden fixed inset-0 z-30 bg-black/40 md:hidden"></div>
+        <aside id="adminSidebar" class="hidden md:flex md:relative md:inset-auto md:z-auto md:w-72 md:flex-col bg-gray-900 text-white fixed inset-y-0 left-0 z-40 w-72">
             <div class="px-6 py-5 border-b border-gray-800">
                 <div class="text-xl font-semibold">SDM Villa Merah</div>
                 <div class="mt-1 text-xs text-gray-400">{{ $roleNames[$userRole] ?? 'User' }}</div>
@@ -103,6 +107,21 @@
             </main>
         </div>
     </div>
+    <script>
+        const adminSidebar = document.getElementById('adminSidebar');
+        const adminToggle = document.getElementById('adminMobileMenuToggle');
+        const adminBackdrop = document.getElementById('adminSidebarBackdrop');
+        function toggleAdminSidebar(open) {
+            const isOpen = typeof open === 'boolean' ? open : adminSidebar.classList.contains('hidden');
+            adminSidebar.classList.toggle('hidden', !isOpen);
+            adminSidebar.classList.toggle('flex', isOpen);
+            adminBackdrop.classList.toggle('hidden', !isOpen);
+            adminToggle.setAttribute('aria-expanded', String(isOpen));
+        }
+        adminToggle?.addEventListener('click', () => toggleAdminSidebar());
+        adminBackdrop?.addEventListener('click', () => toggleAdminSidebar(false));
+        adminSidebar?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => toggleAdminSidebar(false)));
+    </script>
     <script src="{{ asset('js/app.js') }}" defer></script>
 </body>
 </html>

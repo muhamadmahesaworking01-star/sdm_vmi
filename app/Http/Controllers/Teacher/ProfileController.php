@@ -55,6 +55,7 @@ class ProfileController extends EmployeeProfileController
             'kampus_asal' => ['nullable', 'string', 'max:255'],
             'nomor_sertifikat' => ['nullable', 'string', 'max:255'],
             'dokumen_pelatihan' => ['nullable', 'string', 'max:255'],
+            'nama_gadis_ibu_kandung' => ['nullable', 'string', 'max:255'],
         ]);
 
         $employee->update($validated);

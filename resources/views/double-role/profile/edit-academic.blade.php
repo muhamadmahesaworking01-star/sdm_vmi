@@ -24,6 +24,7 @@
         <div class="col-md-6"><label class="form-label">Email</label><input type="email" class="form-control" value="{{ $employee->email }}" readonly></div>
         <div class="col-md-6"><label class="form-label">Telepon / WhatsApp</label><input name="telepon" class="form-control" value="{{ old('telepon', $employee->telepon) }}" required></div>
         <div class="col-md-6"><label class="form-label">NIK / KTP</label><input name="ktp" class="form-control" value="{{ old('ktp', $employee->ktp) }}" inputmode="numeric" maxlength="16"></div>
+        <div class="col-md-6"><label class="form-label">Nama Ibu Kandung</label><input name="nama_gadis_ibu_kandung" class="form-control" value="{{ old('nama_gadis_ibu_kandung', $employee->nama_gadis_ibu_kandung) }}"></div>
         <div class="col-md-6"><label class="form-label">Divisi Akademik</label><input name="divisi_akademik" class="form-control" value="{{ old('divisi_akademik', $employee->divisi_akademik) }}" placeholder="Contoh: Seni Rupa"></div>
         <div class="col-md-6"><label class="form-label">Kampus Asal</label><input name="kampus_asal" class="form-control" value="{{ old('kampus_asal', $employee->kampus_asal) }}" placeholder="Nama perguruan tinggi"></div>
         <div class="col-md-6"><label class="form-label">Dokumen Pelatihan</label><input name="dokumen_pelatihan" class="form-control" value="{{ old('dokumen_pelatihan', $employee->dokumen_pelatihan) }}" placeholder="Nama dokumen/sertifikat pelatihan"></div>

@@ -55,11 +55,37 @@ class DocumentController extends Controller
         abort_unless($employee, 403);
         abort_unless($document->employee_id === $employee->id, 403);
         abort_if($document->jenis_dokumen === 'Kontrak_Kerja', 404);
-        abort_unless(Storage::disk('local')->exists($document->nama_file_path), 404);
+        [$disk, $path] = $this->resolveStoredFile($document->nama_file_path);
+        abort_unless($disk && $path, 404);
 
-        return Storage::disk('local')->response($document->nama_file_path, basename($document->nama_file_path), [
+        return Storage::disk($disk)->response($path, basename($path), [
             'Content-Disposition' => 'inline; filename="'.basename($document->nama_file_path).'"',
         ]);
+    }
+
+    private function resolveStoredFile(?string $path): array
+    {
+        if (! $path) {
+            return [null, null];
+        }
+
+        $path = ltrim(str_replace('\\', '/', $path), '/');
+        $candidates = [$path];
+        foreach (['storage/', 'public/'] as $prefix) {
+            if (str_starts_with($path, $prefix)) {
+                $candidates[] = substr($path, strlen($prefix));
+            }
+        }
+
+        foreach (array_unique($candidates) as $candidate) {
+            foreach (['local', 'public'] as $disk) {
+                if (Storage::disk($disk)->exists($candidate)) {
+                    return [$disk, $candidate];
+                }
+            }
+        }
+
+        return [null, null];
     }
 
     private function employeeFor(Request $request): ?Employee

@@ -22,6 +22,7 @@ class ProfileController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'ktp' => ['nullable', 'digits:16'],
             'jabatan_internal' => ['nullable', 'string', 'max:255'],
+            'agama' => ['nullable', 'string', 'max:32'],
             'alamat' => ['nullable', 'string', 'max:500'],
         ]);
 

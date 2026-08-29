@@ -35,6 +35,7 @@
             <div class="col-md-6"><label class="form-label">NIK</label><input name="ktp" class="form-control" value="{{ old('ktp', $biodata['ktp'] ?? '') }}"></div>
             <div class="col-md-6"><label class="form-label">Email</label><input type="email" name="email" class="form-control" value="{{ old('email', $biodata['email'] ?? $user->email) }}" required></div>
             <div class="col-md-6"><label class="form-label">Jabatan Internal</label><input name="jabatan_internal" class="form-control" value="{{ old('jabatan_internal', $biodata['jabatan_internal'] ?? '') }}" placeholder="Contoh: Kepala Administrasi Sistem"></div>
+            <div class="col-md-6"><label class="form-label" for="agama">Agama</label><select id="agama" name="agama" class="form-select"><option value="">Pilih agama</option>@foreach(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu', 'Lainnya'] as $agama)<option value="{{ $agama }}" @selected(old('agama', $biodata['agama'] ?? '') === $agama)>{{ $agama }}</option>@endforeach</select></div>
             <div class="col-12"><label class="form-label" for="alamat">Alamat</label><textarea id="alamat" name="alamat" rows="4" maxlength="500" class="form-control">{{ old('alamat', $biodata['alamat'] ?? '') }}</textarea></div>
         </div>
 
